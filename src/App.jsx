@@ -1,5 +1,18 @@
 import { useState } from "react";
-import { cscan, fcfs, ljf, lrtf, mlfq, multiCpu, priorityNonPreemptive, priorityPreemptive, rr, scan, sjf, srtf } from "./algos";
+import {
+  cscan,
+  fcfs,
+  ljf,
+  lrtf,
+  mlfq,
+  multiCpu,
+  priorityNonPreemptive,
+  priorityPreemptive,
+  rr,
+  scan,
+  sjf,
+  srtf,
+} from "./algos";
 import { operations } from "./algos/data";
 
 const App = () => {
@@ -13,7 +26,7 @@ const App = () => {
   const [numRequests, setNumRequests] = useState(0);
   const [requests, setRequests] = useState([]);
   const [initialPosition, setInitialPosition] = useState(0);
-  const [direction, setDirection] = useState('up');
+  const [direction, setDirection] = useState("up");
 
   const handleProcessChange = (index, field, value) => {
     const updatedProcesses = [...processes];
@@ -56,12 +69,20 @@ const App = () => {
         schedulingResult = priorityPreemptive(processes);
         break;
       case 10:
-        schedulingResult = scan(requests.map((request) => ({ request })), initialPosition, direction);
+        schedulingResult = scan(
+          requests.map((request) => ({ request })),
+          initialPosition,
+          direction
+        );
         break;
       case 11:
-        schedulingResult = cscan(requests.map((request) => ({ request })), initialPosition, direction);
+        schedulingResult = cscan(
+          requests.map((request) => ({ request })),
+          initialPosition,
+          direction
+        );
         break;
-        case 12:
+      case 12:
         schedulingResult = mlfq(processes, quantumTime);
         break;
       default:
@@ -86,7 +107,8 @@ const App = () => {
         totalBurstTime += process.burstTime;
 
         if (idx > 0) {
-          totalIdleTime += process.startTime - schedulingResult[idx - 1].completionTime;
+          totalIdleTime +=
+            process.startTime - schedulingResult[idx - 1].completionTime;
         }
       });
 
@@ -136,6 +158,8 @@ const App = () => {
             <select
               className="h-10 rounded-md px-2 border border-slate-800 text-center w-full"
               onChange={(e) => {
+                setNumProcesses(0)
+                setProcesses([])
                 const algoId = Number(e.target.value);
                 setSelectedAlgorithm(algoId);
                 if (algoId === 6) setQuantumTime(1);
@@ -152,7 +176,9 @@ const App = () => {
 
           {selectedAlgorithm === 10 || selectedAlgorithm === 11 ? (
             <div>
-              <label className="block text-lg font-semibold">تعداد درخواست‌ها:</label>
+              <label className="block text-lg font-semibold">
+                تعداد درخواست‌ها:
+              </label>
               <input
                 type="number"
                 min="1"
@@ -165,7 +191,9 @@ const App = () => {
                 className="h-10 rounded-md px-2 border border-slate-800 text-center w-full"
               />
               <div>
-                <label className="block text-lg font-semibold">موقعیت اولیه:</label>
+                <label className="block text-lg font-semibold">
+                  موقعیت اولیه:
+                </label>
                 <input
                   type="number"
                   value={initialPosition}
@@ -187,7 +215,9 @@ const App = () => {
             </div>
           ) : (
             <div>
-              <label className="block text-lg font-semibold">تعداد پروسه‌ها:</label>
+              <label className="block text-lg font-semibold">
+                تعداد پروسه‌ها:
+              </label>
               <input
                 type="number"
                 min="1"
@@ -195,7 +225,9 @@ const App = () => {
                 onChange={(e) => {
                   const value = Number(e.target.value);
                   setNumProcesses(value);
-                  setProcesses(Array(value).fill({ arrivalTime: 0, burstTime: 0 }));
+                  setProcesses(
+                    Array(value).fill({ arrivalTime: 0, burstTime: 0 })
+                  );
                 }}
                 className="h-10 rounded-md px-2 border border-slate-800 text-center w-full"
               />
@@ -229,13 +261,19 @@ const App = () => {
           )}
 
           {Array.from({ length: numProcesses || numRequests }, (_, index) => (
-            <div key={index} className="border p-4 rounded-md shadow-sm bg-gray-50 mt-4">
+            <div
+              key={index}
+              className="border p-4 rounded-md shadow-sm bg-gray-50 mt-4"
+            >
               <label className="block text-lg font-semibold">
-                {selectedAlgorithm === 10 || selectedAlgorithm === 11 ? `درخواست ${index + 1}:` : `پروسه ${index + 1}:`}
+                {selectedAlgorithm === 10 || selectedAlgorithm === 11
+                  ? `درخواست ${index + 1}:`
+                  : `پروسه ${index + 1}:`}
               </label>
               {selectedAlgorithm === 10 || selectedAlgorithm === 11 ? (
                 <input
-                  type="number" value={requests[index] || ""}
+                  type="number"
+                  value={requests[index] || ""}
                   onChange={(e) => {
                     const updatedRequests = [...requests];
                     updatedRequests[index] = Number(e.target.value);
@@ -250,7 +288,13 @@ const App = () => {
                     <input
                       type="number"
                       value={processes[index]?.arrivalTime || ""}
-                      onChange={(e) => handleProcessChange(index, "arrivalTime", e.target.value)}
+                      onChange={(e) =>
+                        handleProcessChange(
+                          index,
+                          "arrivalTime",
+                          e.target.value
+                        )
+                      }
                       className="h-10 rounded-md px-2 border border-slate-800 w-full"
                     />
                   </div>
@@ -260,7 +304,9 @@ const App = () => {
                     <input
                       type="number"
                       value={processes[index]?.burstTime || ""}
-                      onChange={(e) => handleProcessChange(index, "burstTime", e.target.value)}
+                      onChange={(e) =>
+                        handleProcessChange(index, "burstTime", e.target.value)
+                      }
                       className="h-10 rounded-md px-2 border border-slate-800 w-full"
                     />
                   </div>
@@ -270,7 +316,9 @@ const App = () => {
                       <label className="text-sm">ارجحیت:</label>
                       <select
                         value={processes[index]?.priority || "low"}
-                        onChange={(e) => handleProcessChange(index, "priority", e.target.value)}
+                        onChange={(e) =>
+                          handleProcessChange(index, "priority", e.target.value)
+                        }
                         className="h-10 rounded-md px-2 border border-slate-800 w-full"
                       >
                         <option value="low">کم</option>
@@ -309,42 +357,86 @@ const App = () => {
             <div>
               {result.length ? (
                 result.map((process) => (
-                  <div key={process.processNumber} className="flex hover:bg-gray-100 transition duration-200">
+                  <div
+                    key={process.processNumber}
+                    className="flex hover:bg-gray-100 transition duration-200"
+                  >
                     {selectedAlgorithm === 10 || selectedAlgorithm === 11 ? (
                       <>
-                        <div className="flex-1 border px-4 py-2">{process.request}</div>
-                        <div className="flex-1 border px-4 py-2">{process.distance}</div>
+                        <div className="flex-1 border px-4 py-2">
+                          {process.request}
+                        </div>
+                        <div className="flex-1 border px-4 py-2">
+                          {process.distance}
+                        </div>
                       </>
                     ) : (
                       <>
-                        <div className="flex-1 border px-4 py-2">{process.processNumber}</div>
-                        <div className="flex-1 border px-4 py-2">{process.arrivalTime}</div>
-                        <div className="flex-1 border px-4 py-2">{process.burstTime}</div>
-                        <div className="flex-1 border px-4 py-2">{process.startTime}</div>
-                        <div className="flex-1 border px-4 py-2">{process.completionTime}</div>
-                        <div className="flex-1 border px-4 py-2">{process.turnaroundTime}</div>
-                        <div className="flex-1 border px-4 py-2">{process .waitingTime}</div>
-                        <div className="flex-1 border px-4 py-2">{process.responseTime}</div>
+                        <div className="flex-1 border px-4 py-2">
+                          {process.processNumber}
+                        </div>
+                        <div className="flex-1 border px-4 py-2">
+                          {process.arrivalTime}
+                        </div>
+                        <div className="flex-1 border px-4 py-2">
+                          {process.burstTime}
+                        </div>
+                        <div className="flex-1 border px-4 py-2">
+                          {process.startTime}
+                        </div>
+                        <div className="flex-1 border px-4 py-2">
+                          {process.completionTime}
+                        </div>
+                        <div className="flex-1 border px-4 py-2">
+                          {process.turnaroundTime}
+                        </div>
+                        <div className="flex-1 border px-4 py-2">
+                          {process.waitingTime}
+                        </div>
+                        <div className="flex-1 border px-4 py-2">
+                          {process.responseTime}
+                        </div>
                       </>
                     )}
                   </div>
                 ))
               ) : (
-                <div className="border px-4 py-6 text-center font-bold">اطلاعاتی یافت نشد</div>
+                <div className="border px-4 py-6 text-center font-bold">
+                  اطلاعاتی یافت نشد
+                </div>
               )}
             </div>
           </div>
         </div>
-        {extraMetrics.cpuUtilization && selectedAlgorithm !== 10 && selectedAlgorithm !== 11 ? (
+        {extraMetrics.cpuUtilization &&
+        selectedAlgorithm !== 10 &&
+        selectedAlgorithm !== 11 ? (
           <div className="mt-4">
-            <p className="font-semibold">استفاده پردازنده: {extraMetrics.cpuUtilization}%</p>
-            <p className="font-semibold">تعداد پردازش در ثانیه: {extraMetrics.throughput}</p>
-            <p className="font-semibold">میانگین زمان اتمام: {extraMetrics.averageCompletionTime}</p>
-            <p className="font-semibold">میانگین زمان چرخش: {extraMetrics.averageTurnaroundTime}</p>
-            <p className="font-semibold">میانگین زمان انتظار: {extraMetrics.averageWaitingTime}</p>
-            <p className="font-semibold">میانگین زمان پاسخ: {extraMetrics.averageResponseTime}</p>
+            <p className="font-semibold">
+              استفاده پردازنده: {extraMetrics.cpuUtilization}%
+            </p>
+            <p className="font-semibold">
+              تعداد پردازش در ثانیه: {extraMetrics.throughput}
+            </p>
+            <p className="font-semibold">
+              میانگین زمان اتمام: {extraMetrics.averageCompletionTime}
+            </p>
+            <p className="font-semibold">
+              میانگین زمان چرخش: {extraMetrics.averageTurnaroundTime}
+            </p>
+            <p className="font-semibold">
+              میانگین زمان انتظار: {extraMetrics.averageWaitingTime}
+            </p>
+            <p className="font-semibold">
+              میانگین زمان پاسخ: {extraMetrics.averageResponseTime}
+            </p>
           </div>
         ) : null}
+
+        <hr className="mt-2 border-gray-400" />
+        <p className="w-full py-6 text-center font-bold">
+          برنامه نویس: محمدحسین حیدری
+        </p>
       </div>
     </div>
   );
