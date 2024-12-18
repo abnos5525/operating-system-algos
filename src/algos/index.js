@@ -278,46 +278,84 @@ const mlfq = (processes, quantumTime) => {
   let currentTime = 0;
   let schedulingResult = [];
   let completedProcesses = 0;
+
+  // افزودن تمام پردازش‌ها به صف اول
   processes.forEach((process, index) => {
-    queues[0].push({ ...process, remainingTime: process.burstTime, processNumber: index + 1 });
+    queues[0].push({
+      ...process,
+      remainingTime: process.burstTime,
+      processNumber: index + 1,
+      startTime: null, // برای محاسبه responseTime
+    });
   });
+
   while (completedProcesses < processes.length) {
+    let processExecuted = false;
+
     for (let i = 0; i < queues.length; i++) {
       const queue = queues[i];
-      let processFound = false;
+
+      // بررسی صف بر اساس زمان ورود فرایندها
       while (queue.length > 0) {
         const process = queue.shift();
-        processFound = true;
+
+        // اگر زمان کنونی کمتر از زمان ورود فرایند باشد، CPU بیکار است
+        if (currentTime < process.arrivalTime) {
+          currentTime = process.arrivalTime;
+        }
+
+        processExecuted = true;
+
+        // محاسبه زمان شروع اولین بار اجرا
+        if (process.startTime === null) {
+          process.startTime = currentTime;
+        }
+
         const executionTime = Math.min(process.remainingTime, quantumTime);
         currentTime += executionTime;
         process.remainingTime -= executionTime;
+
         if (process.remainingTime === 0) {
+          // محاسبه متریک‌ها
           const completionTime = currentTime;
           const turnaroundTime = completionTime - process.arrivalTime;
           const waitingTime = turnaroundTime - process.burstTime;
-          const responseTime = currentTime - process.burstTime - process.arrivalTime;
+          const responseTime = process.startTime - process.arrivalTime;
+
           schedulingResult.push({
-            processNumber: process.processNumber, // شماره پروسه
+            processNumber: process.processNumber,
             arrivalTime: process.arrivalTime,
             burstTime: process.burstTime,
-            startTime: currentTime - executionTime,
+            startTime: process.startTime,
             completionTime,
             turnaroundTime,
             waitingTime,
             responseTime,
           });
+
           completedProcesses++;
         } else {
+          // انتقال به صف بعدی یا ماندن در صف آخر
           if (i < queues.length - 1) {
             queues[i + 1].push(process);
           } else {
-            queues[i].push(process); // در صف آخر باقی می‌ماند
+            queues[i].push(process);
           }
         }
+
+        // اگر پردازشی اجرا شد، حلقه صف‌های بالاتر شکسته می‌شود
+        if (processExecuted) break;
       }
-      if (processFound) break;
+
+      if (processExecuted) break;
+    }
+
+    // اگر هیچ پردازشی اجرا نشود (بیکاری CPU)
+    if (!processExecuted) {
+      currentTime++;
     }
   }
+
   return schedulingResult;
 };
 
