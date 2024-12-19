@@ -144,7 +144,7 @@ const App = () => {
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 h-auto text-center rtl p-4 bg-gradient-to-r from-blue-200 to-purple- 200">
+    <div className="grid grid-cols-1 md:grid-cols-4 md:gap-4 h-auto text-center rtl p-4 bg-gradient-to-r from-blue-200 to-purple- 200">
       <div className="col-span-1 md:col-start-1 border-l-2 border-slate-500 p-6 bg-white rounded-lg shadow-lg">
         <form onSubmit={handleSubmit} className="space-y-4">
           <button
@@ -158,8 +158,8 @@ const App = () => {
             <select
               className="h-10 rounded-md px-2 border border-slate-800 text-center w-full"
               onChange={(e) => {
-                setNumProcesses(0)
-                setProcesses([])
+                setNumProcesses(0);
+                setProcesses([]);
                 const algoId = Number(e.target.value);
                 setSelectedAlgorithm(algoId);
                 if (algoId === 6) setQuantumTime(1);
@@ -332,112 +332,105 @@ const App = () => {
           ))}
         </form>
       </div>
-      <div className="col-span-3 p-6 bg-white rounded-lg shadow-lg">
-        <div className="overflow-x-auto">
-          <div className="min-w-full">
-            <div className="bg-blue-500 text-white flex">
+      <div className="col-span-3 p-6 bg-white rounded-lg shadow-lg mt-5">
+  <div className="overflow-x-auto">
+    <table className="table-auto w-full border-collapse border border-gray-300">
+      <thead>
+        <tr className="bg-blue-500 text-white">
+          {selectedAlgorithm === 10 || selectedAlgorithm === 11 ? (
+            <>
+              <th className="border px-4 py-2">درخواست</th>
+              <th className="border px-4 py-2">فاصله</th>
+            </>
+          ) : (
+            <>
+              <th className="border px-4 py-2">پروسه</th>
+              <th className="border px-4 py-2">زمان ورود</th>
+              <th className="border px-4 py-2">زمان پردازش</th>
+              <th className="border px-4 py-2">زمان شروع</th>
+              <th className="border px-4 py-2">زمان اتمام</th>
+              <th className="border px-4 py-2">زمان چرخش</th>
+              <th className="border px-4 py-2">زمان انتظار</th>
+              <th className="border px-4 py-2">زمان پاسخ</th>
+            </>
+          )}
+        </tr>
+      </thead>
+      <tbody>
+        {result.length ? (
+          result.map((process, index) => (
+            <tr
+              key={index}
+              className={`hover:bg-gray-100 transition duration-200 ${
+                index % 2 === 0 ? "bg-gray-50" : "bg-white"
+              }`}
+            >
               {selectedAlgorithm === 10 || selectedAlgorithm === 11 ? (
                 <>
-                  <div className="flex-1 border px-4 py-2">درخواست</div>
-                  <div className="flex-1 border px-4 py-2">فاصله</div>
+                  <td className="border px-4 py-2">{process.request}</td>
+                  <td className="border px-4 py-2">{process.distance}</td>
                 </>
               ) : (
                 <>
-                  <div className="flex-1 border px-4 py-2">پروسه</div>
-                  <div className="flex-1 border px-4 py-2">زمان ورود</div>
-                  <div className="flex-1 border px-4 py-2">زمان پردازش</div>
-                  <div className="flex-1 border px-4 py-2">زمان شروع</div>
-                  <div className="flex-1 border px-4 py-2">زمان اتمام</div>
-                  <div className="flex-1 border px-4 py-2">زمان چرخش</div>
-                  <div className="flex-1 border px-4 py-2">زمان انتظار</div>
-                  <div className="flex-1 border px-4 py-2">زمان پاسخ</div>
+                  <td className="border px-4 py-2">{process.processNumber}</td>
+                  <td className="border px-4 py-2">{process.arrivalTime}</td>
+                  <td className="border px-4 py-2">{process.burstTime}</td>
+                  <td className="border px-4 py-2">{process.startTime}</td>
+                  <td className="border px-4 py-2">{process.completionTime}</td>
+                  <td className="border px-4 py-2">{process.turnaroundTime}</td>
+                  <td className="border px-4 py-2">{process.waitingTime}</td>
+                  <td className="border px-4 py-2">{process.responseTime}</td>
                 </>
               )}
-            </div>
-            <div>
-              {result.length ? (
-                result.map((process) => (
-                  <div
-                    key={process.processNumber}
-                    className="flex hover:bg-gray-100 transition duration-200"
-                  >
-                    {selectedAlgorithm === 10 || selectedAlgorithm === 11 ? (
-                      <>
-                        <div className="flex-1 border px-4 py-2">
-                          {process.request}
-                        </div>
-                        <div className="flex-1 border px-4 py-2">
-                          {process.distance}
-                        </div>
-                      </>
-                    ) : (
-                      <>
-                        <div className="flex-1 border px-4 py-2">
-                          {process.processNumber}
-                        </div>
-                        <div className="flex-1 border px-4 py-2">
-                          {process.arrivalTime}
-                        </div>
-                        <div className="flex-1 border px-4 py-2">
-                          {process.burstTime}
-                        </div>
-                        <div className="flex-1 border px-4 py-2">
-                          {process.startTime}
-                        </div>
-                        <div className="flex-1 border px-4 py-2">
-                          {process.completionTime}
-                        </div>
-                        <div className="flex-1 border px-4 py-2">
-                          {process.turnaroundTime}
-                        </div>
-                        <div className="flex-1 border px-4 py-2">
-                          {process.waitingTime}
-                        </div>
-                        <div className="flex-1 border px-4 py-2">
-                          {process.responseTime}
-                        </div>
-                      </>
-                    )}
-                  </div>
-                ))
-              ) : (
-                <div className="border px-4 py-6 text-center font-bold">
-                  اطلاعاتی یافت نشد
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-        {extraMetrics.cpuUtilization &&
-        selectedAlgorithm !== 10 &&
-        selectedAlgorithm !== 11 ? (
-          <div className="mt-4">
-            <p className="font-semibold">
-              استفاده پردازنده: {extraMetrics.cpuUtilization}%
-            </p>
-            <p className="font-semibold">
-              تعداد پردازش در ثانیه: {extraMetrics.throughput}
-            </p>
-            <p className="font-semibold">
-              میانگین زمان اتمام: {extraMetrics.averageCompletionTime}
-            </p>
-            <p className="font-semibold">
-              میانگین زمان چرخش: {extraMetrics.averageTurnaroundTime}
-            </p>
-            <p className="font-semibold">
-              میانگین زمان انتظار: {extraMetrics.averageWaitingTime}
-            </p>
-            <p className="font-semibold">
-              میانگین زمان پاسخ: {extraMetrics.averageResponseTime}
-            </p>
-          </div>
-        ) : null}
+            </tr>
+          ))
+        ) : (
+          <tr>
+            <td
+              colSpan={
+                selectedAlgorithm === 10 || selectedAlgorithm === 11 ? 2 : 8
+              }
+              className="border px-4 py-6 text-center font-bold"
+            >
+              اطلاعاتی یافت نشد
+            </td>
+          </tr>
+        )}
+      </tbody>
+    </table>
+  </div>
 
-        <hr className="mt-2 border-gray-400" />
-        <p className="w-full py-6 text-center font-bold">
-          برنامه نویس: محمدحسین حیدری
-        </p>
-      </div>
+  {extraMetrics.cpuUtilization &&
+  selectedAlgorithm !== 10 &&
+  selectedAlgorithm !== 11 ? (
+    <div className="mt-4">
+      <p className="font-semibold">
+        استفاده پردازنده: {extraMetrics.cpuUtilization}%
+      </p>
+      <p className="font-semibold">
+        تعداد پردازش در ثانیه: {extraMetrics.throughput}
+      </p>
+      <p className="font-semibold">
+        میانگین زمان اتمام: {extraMetrics.averageCompletionTime}
+      </p>
+      <p className="font-semibold">
+        میانگین زمان چرخش: {extraMetrics.averageTurnaroundTime}
+      </p>
+      <p className="font-semibold">
+        میانگین زمان انتظار: {extraMetrics.averageWaitingTime}
+      </p>
+      <p className="font-semibold">
+        میانگین زمان پاسخ: {extraMetrics.averageResponseTime}
+      </p>
+    </div>
+  ) : null}
+
+  <hr className="mt-2 border-gray-400" />
+  <p className="w-full py-6 text-center font-bold">
+    برنامه نویس: محمدحسین حیدری
+  </p>
+</div>
+
     </div>
   );
 };
