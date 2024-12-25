@@ -347,11 +347,9 @@ const App = () => {
               <th className="border px-4 py-2">پروسه</th>
               <th className="border px-4 py-2">زمان ورود</th>
               <th className="border px-4 py-2">زمان پردازش</th>
-              <th className="border px-4 py-2">زمان شروع</th>
               <th className="border px-4 py-2">زمان اتمام</th>
               <th className="border px-4 py-2">زمان چرخش</th>
               <th className="border px-4 py-2">زمان انتظار</th>
-              <th className="border px-4 py-2">زمان پاسخ</th>
             </>
           )}
         </tr>
@@ -375,11 +373,9 @@ const App = () => {
                   <td className="border px-4 py-2">{process.processNumber}</td>
                   <td className="border px-4 py-2">{process.arrivalTime}</td>
                   <td className="border px-4 py-2">{process.burstTime}</td>
-                  <td className="border px-4 py-2">{process.startTime}</td>
                   <td className="border px-4 py-2">{process.completionTime}</td>
                   <td className="border px-4 py-2">{process.turnaroundTime}</td>
                   <td className="border px-4 py-2">{process.waitingTime}</td>
-                  <td className="border px-4 py-2">{process.responseTime}</td>
                 </>
               )}
             </tr>

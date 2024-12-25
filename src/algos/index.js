@@ -218,35 +218,47 @@ const lrtf = (processes) => {
   return schedulingResult.sort((a, b) => a.startTime - b.startTime); // مرتب‌سازی بر اساس زمان شروع
 };
 
- const rr = (processes, quantumTime) => {
+const rr = (processes, quantumTime) => {
   let currentTime = 0;
   const schedulingResult = [];
-  const queue = processes.map((p, i) => ({
-    ...p,
-    processNumber: i + 1,
-    remainingTime: p.burstTime,
-    firstResponse: null,
-  }));
+
+  // مرتب‌سازی اولیه بر اساس زمان ورود
+  const queue = processes
+    .map((p, i) => ({
+      ...p,
+      processNumber: i + 1,
+      remainingTime: p.burstTime,
+      firstResponse: null,
+    }))
+    .sort((a, b) => a.arrivalTime - b.arrivalTime);
+
   let completedProcesses = 0;
+
   while (completedProcesses < processes.length) {
     let processFound = false;
+
     for (let i = 0; i < queue.length; i++) {
       const process = queue[i];
+
       if (process.remainingTime > 0 && process.arrivalTime <= currentTime) {
         processFound = true;
+
         const startTime = currentTime;
         const executionTime = Math.min(process.remainingTime, quantumTime);
         currentTime += executionTime;
         process.remainingTime -= executionTime;
+
         if (process.firstResponse === null) {
           process.firstResponse = startTime;
         }
+
         if (process.remainingTime === 0) {
           completedProcesses++;
           const completionTime = currentTime;
           const turnaroundTime = completionTime - process.arrivalTime;
           const waitingTime = turnaroundTime - process.burstTime;
           const responseTime = process.firstResponse - process.arrivalTime;
+
           schedulingResult.push({
             processNumber: process.processNumber,
             arrivalTime: process.arrivalTime,
@@ -257,19 +269,20 @@ const lrtf = (processes) => {
             waitingTime: waitingTime,
             responseTime: responseTime,
           });
-          queue.splice(i, 1);
-          i--;
         } else {
           queue.push(queue.splice(i, 1)[0]);
-          i--;
         }
+
         break;
       }
     }
+
     if (!processFound) {
       currentTime++;
     }
   }
+
+  // حفظ ترتیب پروسه‌ها در خروجی بر اساس شماره پروسه
   return schedulingResult.sort((a, b) => a.processNumber - b.processNumber);
 };
 
